@@ -1,0 +1,1403 @@
+{
+  "metadata": {
+    "word_case_count": 288,
+    "sentence_case_count": 60,
+    "notes": "Generated regression dataset for Arabizi linguistic engine"
+  },
+  "word_cases": [
+    {
+      "latin": "kan",
+      "arabic": "كان"
+    },
+    {
+      "latin": "kaan",
+      "arabic": "كان"
+    },
+    {
+      "latin": "kaaan",
+      "arabic": "كان"
+    },
+    {
+      "latin": "makan",
+      "arabic": "مكان"
+    },
+    {
+      "latin": "mkaan",
+      "arabic": "مكان"
+    },
+    {
+      "latin": "salam",
+      "arabic": "سلام"
+    },
+    {
+      "latin": "salem",
+      "arabic": "سلام"
+    },
+    {
+      "latin": "salamaleykom",
+      "arabic": "سلام عليكم"
+    },
+    {
+      "latin": "alsalamaleykom",
+      "arabic": "السلام عليكم"
+    },
+    {
+      "latin": "alsalamalaykom",
+      "arabic": "السلام عليكم"
+    },
+    {
+      "latin": "ezayyak",
+      "arabic": "ازيك"
+    },
+    {
+      "latin": "m3ak",
+      "arabic": "معك"
+    },
+    {
+      "latin": "3ala",
+      "arabic": "على"
+    },
+    {
+      "latin": "2al",
+      "arabic": "قال"
+    },
+    {
+      "latin": "hala",
+      "arabic": "هلا"
+    },
+    {
+      "latin": "ahlan",
+      "arabic": "أهلن"
+    },
+    {
+      "latin": "marhaba",
+      "arabic": "مرهبا"
+    },
+    {
+      "latin": "keef",
+      "arabic": "كيف"
+    },
+    {
+      "latin": "keefak",
+      "arabic": "كيفك"
+    },
+    {
+      "latin": "keefkom",
+      "arabic": "كيفكم"
+    },
+    {
+      "latin": "ana",
+      "arabic": "أنا"
+    },
+    {
+      "latin": "enta",
+      "arabic": "إنتا"
+    },
+    {
+      "latin": "enti",
+      "arabic": "إنتي"
+    },
+    {
+      "latin": "ehna",
+      "arabic": "إهنا"
+    },
+    {
+      "latin": "homa",
+      "arabic": "هما"
+    },
+    {
+      "latin": "huwa",
+      "arabic": "هوا"
+    },
+    {
+      "latin": "hya",
+      "arabic": "هيا"
+    },
+    {
+      "latin": "youm",
+      "arabic": "يوم"
+    },
+    {
+      "latin": "lel",
+      "arabic": "لل"
+    },
+    {
+      "latin": "nahar",
+      "arabic": "نهر"
+    },
+    {
+      "latin": "sabah",
+      "arabic": "سبه"
+    },
+    {
+      "latin": "masa",
+      "arabic": "مسا"
+    },
+    {
+      "latin": "beit",
+      "arabic": "بت"
+    },
+    {
+      "latin": "bayt",
+      "arabic": "بايت"
+    },
+    {
+      "latin": "kitaab",
+      "arabic": "كتاب"
+    },
+    {
+      "latin": "ktab",
+      "arabic": "كتاب"
+    },
+    {
+      "latin": "madrasa",
+      "arabic": "مدرسا"
+    },
+    {
+      "latin": "jam3a",
+      "arabic": "جمعا"
+    },
+    {
+      "latin": "madina",
+      "arabic": "مدنا"
+    },
+    {
+      "latin": "taree2",
+      "arabic": "تريء"
+    },
+    {
+      "latin": "shari3",
+      "arabic": "شارع"
+    },
+    {
+      "latin": "sayara",
+      "arabic": "سيرا"
+    },
+    {
+      "latin": "otobus",
+      "arabic": "أُتبس"
+    },
+    {
+      "latin": "qatar",
+      "arabic": "قمر"
+    },
+    {
+      "latin": "tayara",
+      "arabic": "تيرا"
+    },
+    {
+      "latin": "sou2",
+      "arabic": "سوء"
+    },
+    {
+      "latin": "mat3am",
+      "arabic": "مطعم"
+    },
+    {
+      "latin": "qahwa",
+      "arabic": "قهوا"
+    },
+    {
+      "latin": "shay",
+      "arabic": "شاي"
+    },
+    {
+      "latin": "maya",
+      "arabic": "ميا"
+    },
+    {
+      "latin": "moyah",
+      "arabic": "ميه"
+    },
+    {
+      "latin": "khobz",
+      "arabic": "خبز"
+    },
+    {
+      "latin": "roz",
+      "arabic": "رز"
+    },
+    {
+      "latin": "lahm",
+      "arabic": "لاهم"
+    },
+    {
+      "latin": "dajaj",
+      "arabic": "دجاج"
+    },
+    {
+      "latin": "samak",
+      "arabic": "سمك"
+    },
+    {
+      "latin": "fawakeh",
+      "arabic": "فاوكه"
+    },
+    {
+      "latin": "khodar",
+      "arabic": "خدر"
+    },
+    {
+      "latin": "sokkar",
+      "arabic": "سكر"
+    },
+    {
+      "latin": "milh",
+      "arabic": "ملح"
+    },
+    {
+      "latin": "zayt",
+      "arabic": "زايت"
+    },
+    {
+      "latin": "haleeb",
+      "arabic": "هليب"
+    },
+    {
+      "latin": "jobn",
+      "arabic": "جبل"
+    },
+    {
+      "latin": "bayd",
+      "arabic": "بايد"
+    },
+    {
+      "latin": "shoghl",
+      "arabic": "شغل"
+    },
+    {
+      "latin": "wazifa",
+      "arabic": "وزفا"
+    },
+    {
+      "latin": "sharika",
+      "arabic": "شركا"
+    },
+    {
+      "latin": "maktab",
+      "arabic": "مكتب"
+    },
+    {
+      "latin": "kompyuter",
+      "arabic": "كمبيتر"
+    },
+    {
+      "latin": "telefon",
+      "arabic": "تلفن"
+    },
+    {
+      "latin": "resala",
+      "arabic": "رسلا"
+    },
+    {
+      "latin": "sora",
+      "arabic": "سرا"
+    },
+    {
+      "latin": "video",
+      "arabic": "فدو"
+    },
+    {
+      "latin": "musiqa",
+      "arabic": "مسقا"
+    },
+    {
+      "latin": "film",
+      "arabic": "فلم"
+    },
+    {
+      "latin": "lo3ba",
+      "arabic": "لعبا"
+    },
+    {
+      "latin": "khabar",
+      "arabic": "خبز"
+    },
+    {
+      "latin": "loga",
+      "arabic": "لغا"
+    },
+    {
+      "latin": "3arabi",
+      "arabic": "عربي"
+    },
+    {
+      "latin": "englizi",
+      "arabic": "إنغلزي"
+    },
+    {
+      "latin": "masri",
+      "arabic": "مسري"
+    },
+    {
+      "latin": "shami",
+      "arabic": "شمي"
+    },
+    {
+      "latin": "khaliji",
+      "arabic": "خلجي"
+    },
+    {
+      "latin": "lahga",
+      "arabic": "لهغا"
+    },
+    {
+      "latin": "sadeeq",
+      "arabic": "سديق"
+    },
+    {
+      "latin": "sadeeqa",
+      "arabic": "سديقا"
+    },
+    {
+      "latin": "3aela",
+      "arabic": "علا"
+    },
+    {
+      "latin": "ab",
+      "arabic": "أب"
+    },
+    {
+      "latin": "om",
+      "arabic": "أُم"
+    },
+    {
+      "latin": "akh",
+      "arabic": "أخ"
+    },
+    {
+      "latin": "okht",
+      "arabic": "أُخت"
+    },
+    {
+      "latin": "ibn",
+      "arabic": "إبن"
+    },
+    {
+      "latin": "bint",
+      "arabic": "بيت"
+    },
+    {
+      "latin": "zawj",
+      "arabic": "زاوج"
+    },
+    {
+      "latin": "zawja",
+      "arabic": "زاوجا"
+    },
+    {
+      "latin": "tefl",
+      "arabic": "تفل"
+    },
+    {
+      "latin": "walad",
+      "arabic": "ولد"
+    },
+    {
+      "latin": "ragel",
+      "arabic": "رجل"
+    },
+    {
+      "latin": "set",
+      "arabic": "ست"
+    },
+    {
+      "latin": "hob",
+      "arabic": "هب"
+    },
+    {
+      "latin": "farah",
+      "arabic": "فره"
+    },
+    {
+      "latin": "hozn",
+      "arabic": "هزن"
+    },
+    {
+      "latin": "khof",
+      "arabic": "خف"
+    },
+    {
+      "latin": "amal",
+      "arabic": "أمل"
+    },
+    {
+      "latin": "helm",
+      "arabic": "هم"
+    },
+    {
+      "latin": "nagah",
+      "arabic": "نغه"
+    },
+    {
+      "latin": "fashal",
+      "arabic": "فشل"
+    },
+    {
+      "latin": "dars",
+      "arabic": "دارس"
+    },
+    {
+      "latin": "emtihan",
+      "arabic": "إمتهن"
+    },
+    {
+      "latin": "natiga",
+      "arabic": "نتغا"
+    },
+    {
+      "latin": "so2al",
+      "arabic": "سهل"
+    },
+    {
+      "latin": "gawab",
+      "arabic": "غاوب"
+    },
+    {
+      "latin": "fikra",
+      "arabic": "فكرا"
+    },
+    {
+      "latin": "mashroo3",
+      "arabic": "مشروع"
+    },
+    {
+      "latin": "khitta",
+      "arabic": "ختا"
+    },
+    {
+      "latin": "hadaf",
+      "arabic": "هدف"
+    },
+    {
+      "latin": "moshkela",
+      "arabic": "مشكلا"
+    },
+    {
+      "latin": "hal",
+      "arabic": "هال"
+    },
+    {
+      "latin": "bedaya",
+      "arabic": "بديا"
+    },
+    {
+      "latin": "nehaya",
+      "arabic": "نهيا"
+    },
+    {
+      "latin": "qabl",
+      "arabic": "قابل"
+    },
+    {
+      "latin": "ba3d",
+      "arabic": "بعد"
+    },
+    {
+      "latin": "alyom",
+      "arabic": "اليم"
+    },
+    {
+      "latin": "bokra",
+      "arabic": "بكرا"
+    },
+    {
+      "latin": "embareh",
+      "arabic": "إمبره"
+    },
+    {
+      "latin": "dilwa2ti",
+      "arabic": "دلوءتي"
+    },
+    {
+      "latin": "daieman",
+      "arabic": "دمن"
+    },
+    {
+      "latin": "abadan",
+      "arabic": "أبدن"
+    },
+    {
+      "latin": "hena",
+      "arabic": "هنا"
+    },
+    {
+      "latin": "henak",
+      "arabic": "هوك"
+    },
+    {
+      "latin": "areeb",
+      "arabic": "اليب"
+    },
+    {
+      "latin": "ba3eed",
+      "arabic": "بعيد"
+    },
+    {
+      "latin": "saree3",
+      "arabic": "سريع"
+    },
+    {
+      "latin": "batee2",
+      "arabic": "بتيء"
+    },
+    {
+      "latin": "kbeer",
+      "arabic": "كبير"
+    },
+    {
+      "latin": "soghayar",
+      "arabic": "سغير"
+    },
+    {
+      "latin": "gedeed",
+      "arabic": "غديد"
+    },
+    {
+      "latin": "adeem",
+      "arabic": "أديم"
+    },
+    {
+      "latin": "ghali",
+      "arabic": "غلي"
+    },
+    {
+      "latin": "rakhis",
+      "arabic": "راس"
+    },
+    {
+      "latin": "sa7",
+      "arabic": "سح"
+    },
+    {
+      "latin": "ghalat",
+      "arabic": "غلت"
+    },
+    {
+      "latin": "sahl",
+      "arabic": "ساهل"
+    },
+    {
+      "latin": "sa3b",
+      "arabic": "سعب"
+    },
+    {
+      "latin": "akl",
+      "arabic": "أكل"
+    },
+    {
+      "latin": "shorb",
+      "arabic": "شرب"
+    },
+    {
+      "latin": "nom",
+      "arabic": "نم"
+    },
+    {
+      "latin": "sa7i",
+      "arabic": "سحي"
+    },
+    {
+      "latin": "ra7",
+      "arabic": "رح"
+    },
+    {
+      "latin": "ga",
+      "arabic": "غا"
+    },
+    {
+      "latin": "sami3",
+      "arabic": "سمك"
+    },
+    {
+      "latin": "shaf",
+      "arabic": "شاف"
+    },
+    {
+      "latin": "3araf",
+      "arabic": "عرف"
+    },
+    {
+      "latin": "fahim",
+      "arabic": "فهم"
+    },
+    {
+      "latin": "katab",
+      "arabic": "كتاب"
+    },
+    {
+      "latin": "qara",
+      "arabic": "قرا"
+    },
+    {
+      "latin": "fata7",
+      "arabic": "فتح"
+    },
+    {
+      "latin": "sakar",
+      "arabic": "سكر"
+    },
+    {
+      "latin": "ga3ad",
+      "arabic": "غعد"
+    },
+    {
+      "latin": "wa2af",
+      "arabic": "وءف"
+    },
+    {
+      "latin": "dakhal",
+      "arabic": "دخل"
+    },
+    {
+      "latin": "tala3",
+      "arabic": "تلع"
+    },
+    {
+      "latin": "raga3",
+      "arabic": "رغع"
+    },
+    {
+      "latin": "masha",
+      "arabic": "مشا"
+    },
+    {
+      "latin": "gara",
+      "arabic": "غرا"
+    },
+    {
+      "latin": "de7ek",
+      "arabic": "دحك"
+    },
+    {
+      "latin": "baka",
+      "arabic": "بكا"
+    },
+    {
+      "latin": "eshtara",
+      "arabic": "إشترا"
+    },
+    {
+      "latin": "ba3",
+      "arabic": "بع"
+    },
+    {
+      "latin": "7awal",
+      "arabic": "حاول"
+    },
+    {
+      "latin": "sa3ad",
+      "arabic": "سعد"
+    },
+    {
+      "latin": "faza",
+      "arabic": "فزا"
+    },
+    {
+      "latin": "kheser",
+      "arabic": "خسر"
+    },
+    {
+      "latin": "ghayar",
+      "arabic": "غير"
+    },
+    {
+      "latin": "bada",
+      "arabic": "بدا"
+    },
+    {
+      "latin": "khalas",
+      "arabic": "خلس"
+    },
+    {
+      "latin": "wasal",
+      "arabic": "وسل"
+    },
+    {
+      "latin": "etesal",
+      "arabic": "إتسل"
+    },
+    {
+      "latin": "takalam",
+      "arabic": "تكلم"
+    },
+    {
+      "latin": "sa2al",
+      "arabic": "سهل"
+    },
+    {
+      "latin": "kaaaan",
+      "arabic": "كان"
+    },
+    {
+      "latin": "kean",
+      "arabic": "كن"
+    },
+    {
+      "latin": "keean",
+      "arabic": "كين"
+    },
+    {
+      "latin": "kian",
+      "arabic": "كن"
+    },
+    {
+      "latin": "kiian",
+      "arabic": "كين"
+    },
+    {
+      "latin": "koan",
+      "arabic": "كن"
+    },
+    {
+      "latin": "kooan",
+      "arabic": "كون"
+    },
+    {
+      "latin": "kuan",
+      "arabic": "كن"
+    },
+    {
+      "latin": "kuuan",
+      "arabic": "كون"
+    },
+    {
+      "latin": "saalam",
+      "arabic": "سالم"
+    },
+    {
+      "latin": "saaalam",
+      "arabic": "سالم"
+    },
+    {
+      "latin": "saaaalam",
+      "arabic": "سالم"
+    },
+    {
+      "latin": "sealam",
+      "arabic": "سلام"
+    },
+    {
+      "latin": "seealam",
+      "arabic": "سيلم"
+    },
+    {
+      "latin": "sialam",
+      "arabic": "سلام"
+    },
+    {
+      "latin": "siialam",
+      "arabic": "سيلم"
+    },
+    {
+      "latin": "soalam",
+      "arabic": "سلام"
+    },
+    {
+      "latin": "sooalam",
+      "arabic": "سولم"
+    },
+    {
+      "latin": "sualam",
+      "arabic": "سلام"
+    },
+    {
+      "latin": "suualam",
+      "arabic": "سولم"
+    },
+    {
+      "latin": "kaalam",
+      "arabic": "كالم"
+    },
+    {
+      "latin": "kaaalam",
+      "arabic": "كالم"
+    },
+    {
+      "latin": "kaaaalam",
+      "arabic": "كالم"
+    },
+    {
+      "latin": "kealam",
+      "arabic": "كلم"
+    },
+    {
+      "latin": "keealam",
+      "arabic": "كيلم"
+    },
+    {
+      "latin": "kialam",
+      "arabic": "كلم"
+    },
+    {
+      "latin": "kiialam",
+      "arabic": "كيلم"
+    },
+    {
+      "latin": "koalam",
+      "arabic": "كلم"
+    },
+    {
+      "latin": "kooalam",
+      "arabic": "كولم"
+    },
+    {
+      "latin": "kualam",
+      "arabic": "كلم"
+    },
+    {
+      "latin": "kuualam",
+      "arabic": "كولم"
+    },
+    {
+      "latin": "maakan",
+      "arabic": "ماكن"
+    },
+    {
+      "latin": "maaakan",
+      "arabic": "ماكن"
+    },
+    {
+      "latin": "maaaakan",
+      "arabic": "ماكن"
+    },
+    {
+      "latin": "meakan",
+      "arabic": "مكان"
+    },
+    {
+      "latin": "meeakan",
+      "arabic": "ميكن"
+    },
+    {
+      "latin": "miakan",
+      "arabic": "مكان"
+    },
+    {
+      "latin": "miiakan",
+      "arabic": "ميكن"
+    },
+    {
+      "latin": "moakan",
+      "arabic": "مكان"
+    },
+    {
+      "latin": "mooakan",
+      "arabic": "موكن"
+    },
+    {
+      "latin": "muakan",
+      "arabic": "مكان"
+    },
+    {
+      "latin": "muuakan",
+      "arabic": "موكن"
+    },
+    {
+      "latin": "saadeeq",
+      "arabic": "ساديق"
+    },
+    {
+      "latin": "saaadeeq",
+      "arabic": "ساديق"
+    },
+    {
+      "latin": "saaaadeeq",
+      "arabic": "ساديق"
+    },
+    {
+      "latin": "seadeeq",
+      "arabic": "سديق"
+    },
+    {
+      "latin": "seeadeeq",
+      "arabic": "سيديق"
+    },
+    {
+      "latin": "siadeeq",
+      "arabic": "سديق"
+    },
+    {
+      "latin": "siiadeeq",
+      "arabic": "سيديق"
+    },
+    {
+      "latin": "soadeeq",
+      "arabic": "سديق"
+    },
+    {
+      "latin": "sooadeeq",
+      "arabic": "سوديق"
+    },
+    {
+      "latin": "suadeeq",
+      "arabic": "سديق"
+    },
+    {
+      "latin": "suuadeeq",
+      "arabic": "سوديق"
+    },
+    {
+      "latin": "kaetab",
+      "arabic": "كتاب"
+    },
+    {
+      "latin": "kaaetab",
+      "arabic": "كاتب"
+    },
+    {
+      "latin": "kaaaetab",
+      "arabic": "كاتب"
+    },
+    {
+      "latin": "keetab",
+      "arabic": "كيتب"
+    },
+    {
+      "latin": "keeetab",
+      "arabic": "كيتب"
+    },
+    {
+      "latin": "kietab",
+      "arabic": "كتاب"
+    },
+    {
+      "latin": "kiietab",
+      "arabic": "كيتب"
+    },
+    {
+      "latin": "koetab",
+      "arabic": "كتاب"
+    },
+    {
+      "latin": "kooetab",
+      "arabic": "كوتب"
+    },
+    {
+      "latin": "kuetab",
+      "arabic": "كتاب"
+    },
+    {
+      "latin": "kuuetab",
+      "arabic": "كوتب"
+    },
+    {
+      "latin": "maadina",
+      "arabic": "مادنا"
+    },
+    {
+      "latin": "maaadina",
+      "arabic": "مادنا"
+    },
+    {
+      "latin": "maaaadina",
+      "arabic": "مادنا"
+    },
+    {
+      "latin": "meadina",
+      "arabic": "مدنا"
+    },
+    {
+      "latin": "meeadina",
+      "arabic": "ميدنا"
+    },
+    {
+      "latin": "miadina",
+      "arabic": "مدنا"
+    },
+    {
+      "latin": "miiadina",
+      "arabic": "ميدنا"
+    },
+    {
+      "latin": "moadina",
+      "arabic": "مدنا"
+    },
+    {
+      "latin": "mooadina",
+      "arabic": "مودنا"
+    },
+    {
+      "latin": "muadina",
+      "arabic": "مدنا"
+    },
+    {
+      "latin": "muuadina",
+      "arabic": "مودنا"
+    },
+    {
+      "latin": "sahoghl",
+      "arabic": "سهل"
+    },
+    {
+      "latin": "saahoghl",
+      "arabic": "ساهغل"
+    },
+    {
+      "latin": "saaahoghl",
+      "arabic": "ساهغل"
+    },
+    {
+      "latin": "sehoghl",
+      "arabic": "سهل"
+    },
+    {
+      "latin": "seehoghl",
+      "arabic": "سيهغل"
+    },
+    {
+      "latin": "sihoghl",
+      "arabic": "سهل"
+    },
+    {
+      "latin": "siihoghl",
+      "arabic": "سيهغل"
+    },
+    {
+      "latin": "sohoghl",
+      "arabic": "سهل"
+    },
+    {
+      "latin": "soohoghl",
+      "arabic": "سوهغل"
+    },
+    {
+      "latin": "suhoghl",
+      "arabic": "سهل"
+    },
+    {
+      "latin": "suuhoghl",
+      "arabic": "سوهغل"
+    },
+    {
+      "latin": "kahabar",
+      "arabic": "كهبر"
+    },
+    {
+      "latin": "kaahabar",
+      "arabic": "كاهبر"
+    },
+    {
+      "latin": "kaaahabar",
+      "arabic": "كاهبر"
+    },
+    {
+      "latin": "kehabar",
+      "arabic": "كهبر"
+    },
+    {
+      "latin": "keehabar",
+      "arabic": "كيهبر"
+    },
+    {
+      "latin": "kihabar",
+      "arabic": "كهبر"
+    },
+    {
+      "latin": "kiihabar",
+      "arabic": "كيهبر"
+    },
+    {
+      "latin": "kohabar",
+      "arabic": "كهبر"
+    },
+    {
+      "latin": "koohabar",
+      "arabic": "كوهبر"
+    },
+    {
+      "latin": "kuhabar",
+      "arabic": "كهبر"
+    },
+    {
+      "latin": "kuuhabar",
+      "arabic": "كوهبر"
+    },
+    {
+      "latin": "maashroo3",
+      "arabic": "ماشروع"
+    },
+    {
+      "latin": "maaashroo3",
+      "arabic": "ماشروع"
+    },
+    {
+      "latin": "maaaashroo3",
+      "arabic": "ماشروع"
+    },
+    {
+      "latin": "meashroo3",
+      "arabic": "مشروع"
+    },
+    {
+      "latin": "meeashroo3",
+      "arabic": "ميشروع"
+    },
+    {
+      "latin": "miashroo3",
+      "arabic": "مشروع"
+    },
+    {
+      "latin": "miiashroo3",
+      "arabic": "ميشروع"
+    },
+    {
+      "latin": "moashroo3",
+      "arabic": "مشروع"
+    },
+    {
+      "latin": "mooashroo3",
+      "arabic": "موشروع"
+    },
+    {
+      "latin": "muashroo3",
+      "arabic": "مشروع"
+    },
+    {
+      "latin": "muuashroo3",
+      "arabic": "موشروع"
+    }
+  ],
+  "sentence_cases": [
+    {
+      "latin": "alsalamaleykom ya makan",
+      "arabic": "السلام عليكم يا مكان"
+    },
+    {
+      "latin": "alsalamaleykom ya 7abibi",
+      "arabic": "السلام عليكم يا حببي"
+    },
+    {
+      "latin": "ezayyak ya sadeeq",
+      "arabic": "ازيك يا سديق"
+    },
+    {
+      "latin": "ana m3ak alyom",
+      "arabic": "أنا معك اليم"
+    },
+    {
+      "latin": "2al kan hena",
+      "arabic": "قال كان هنا"
+    },
+    {
+      "latin": "ya makan kan fi beit",
+      "arabic": "يا مكان كان في بت"
+    },
+    {
+      "latin": "al kitab fi al beit",
+      "arabic": "أل كتاب في أل بت"
+    },
+    {
+      "latin": "el madrasa ba3eed",
+      "arabic": "إل مدرسا بعيد"
+    },
+    {
+      "latin": "as shams tal3et alyom",
+      "arabic": "أس شامس تلعت اليم"
+    },
+    {
+      "latin": "ar ragel masha saree3",
+      "arabic": "أر رجل مشا سريع"
+    },
+    {
+      "latin": "keef halak alyom",
+      "arabic": "كيف هوك اليم"
+    },
+    {
+      "latin": "ana ra7 al sou2 bokra",
+      "arabic": "أنا رح أل سوء بكرا"
+    },
+    {
+      "latin": "hena fi mat3am kbeer",
+      "arabic": "هنا في مطعم كبير"
+    },
+    {
+      "latin": "enta m3aya wala la",
+      "arabic": "إنتا معيا ولا لا"
+    },
+    {
+      "latin": "ehna hena fi al madina",
+      "arabic": "إهنا هنا في أل مدنا"
+    },
+    {
+      "latin": "ya 7abibi ta3ala hena",
+      "arabic": "يا حببي تعلا هنا"
+    },
+    {
+      "latin": "fi al layl al qamar gameel",
+      "arabic": "في أل لايل أل قمر غميل"
+    },
+    {
+      "latin": "ana 2oltlak min qabl",
+      "arabic": "أنا ءلتلك من قابل"
+    },
+    {
+      "latin": "makan kbeer fi al madina",
+      "arabic": "مكان كبير في أل مدنا"
+    },
+    {
+      "latin": "kan fi wa7ed walad",
+      "arabic": "كان في وحد ولد"
+    },
+    {
+      "latin": "al sayara fi al shari3",
+      "arabic": "أل سيرا في أل شارع"
+    },
+    {
+      "latin": "el qahwa helwa geddan",
+      "arabic": "إل قهوا هلوا غدن"
+    },
+    {
+      "latin": "fi al beit kitir kutob",
+      "arabic": "في أل بت كتر كتاب"
+    },
+    {
+      "latin": "ya salam 3ala al jaw",
+      "arabic": "يا سلام على أل جاو"
+    },
+    {
+      "latin": "m3ak fi al taree2",
+      "arabic": "معك في أل تريء"
+    },
+    {
+      "latin": "al bint fi al madrasa",
+      "arabic": "أل بيت في أل مدرسا"
+    },
+    {
+      "latin": "al walad fi al jam3a",
+      "arabic": "أل ولد في أل جمعا"
+    },
+    {
+      "latin": "ana bashrab qahwa",
+      "arabic": "أنا بشرب قهوا"
+    },
+    {
+      "latin": "huwa byektob resala",
+      "arabic": "هوا بيكتب رسلا"
+    },
+    {
+      "latin": "hya btetfarag film",
+      "arabic": "هيا بتتفرغ فلم"
+    },
+    {
+      "latin": "ehna benel3ab lo3ba",
+      "arabic": "إهنا بنلعب لعبا"
+    },
+    {
+      "latin": "homa bey7ebo musiqa",
+      "arabic": "هما بيحبو مسقا"
+    },
+    {
+      "latin": "fi al sou2 fawakeh w khodar",
+      "arabic": "في أل سوء فاوكه و خدر"
+    },
+    {
+      "latin": "ana ba7eb al lugha al 3arabi",
+      "arabic": "أنا بحر أل لغا أل عربي"
+    },
+    {
+      "latin": "al shoghl alyom sa3b",
+      "arabic": "أل شغل اليم سعب"
+    },
+    {
+      "latin": "al emtihan bokra",
+      "arabic": "أل إمتهن بكرا"
+    },
+    {
+      "latin": "al natiga ba3d bokra",
+      "arabic": "أل نتغا بعد بكرا"
+    },
+    {
+      "latin": "ya rab ykoon yom gameel",
+      "arabic": "يا راب يكون يم غميل"
+    },
+    {
+      "latin": "allah kareem daiman",
+      "arabic": "الله كريم دمن"
+    },
+    {
+      "latin": "ana 3ayez arokh al mat3am",
+      "arabic": "أنا عيز الأُخ أل مطعم"
+    },
+    {
+      "latin": "as salam 3aleykom ya gama3a",
+      "arabic": "أس سلام عليكم يا غمعا"
+    },
+    {
+      "latin": "ar rajel 2al kalam mohem",
+      "arabic": "أر رجل قال كلم مهم"
+    },
+    {
+      "latin": "al bahr kbeer",
+      "arabic": "أل باهر كبير"
+    },
+    {
+      "latin": "al nahr tawil",
+      "arabic": "أل ناهر تاول"
+    },
+    {
+      "latin": "al jabal 3ali",
+      "arabic": "أل جبل علي"
+    },
+    {
+      "latin": "al ard khadra",
+      "arabic": "أل الد خدرا"
+    },
+    {
+      "latin": "al sama safya",
+      "arabic": "أل سما سفيا"
+    },
+    {
+      "latin": "el layl hadi",
+      "arabic": "إل لايل هدي"
+    },
+    {
+      "latin": "al shams harra",
+      "arabic": "أل شامس هرا"
+    },
+    {
+      "latin": "al qamar munir",
+      "arabic": "أل قمر منر"
+    },
+    {
+      "latin": "ana kont hena embareh",
+      "arabic": "أنا كنت هنا إمبره"
+    },
+    {
+      "latin": "ehna hanroo7 bokra",
+      "arabic": "إهنا هنروح بكرا"
+    },
+    {
+      "latin": "homa gao dilwa2ti",
+      "arabic": "هما غو دلوءتي"
+    },
+    {
+      "latin": "ya makan ya salam",
+      "arabic": "يا مكان يا سلام"
+    },
+    {
+      "latin": "kan ya makan fi qadeem al zaman",
+      "arabic": "كان يا مكان في قديم أل زمن"
+    },
+    {
+      "latin": "ana ba2ra kitab gedeed",
+      "arabic": "أنا بءرا كتاب غديد"
+    },
+    {
+      "latin": "enta betesma3 khabar",
+      "arabic": "إنتا بتسمع خبز"
+    },
+    {
+      "latin": "hya betes2al so2al",
+      "arabic": "هيا بتسءل سهل"
+    },
+    {
+      "latin": "ana bagawab be sor3a",
+      "arabic": "أنا بغاوب بي سرعا"
+    },
+    {
+      "latin": "m3ak waqt wala la",
+      "arabic": "معك واقت ولا لا"
+    }
+  ]
+}

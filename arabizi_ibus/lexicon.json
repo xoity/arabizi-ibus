@@ -1,0 +1,128 @@
+{
+  "prefixes": {
+    "al": "ال",
+    "el": "ال",
+    "as": "ال",
+    "ar": "ال"
+  },
+  "mappings": {
+    "7'": "خ",
+    "kh": "خ",
+    "sh": "ش",
+    "gh": "غ",
+    "th": "ث",
+    "dh": "ذ",
+    "ch": "تش",
+    "aa": "ا",
+    "ee": "ي",
+    "ii": "ي",
+    "oo": "و",
+    "uu": "و",
+    "ou": "و",
+    "aw": "او",
+    "2": "ء",
+    "3": "ع",
+    "4": "غ",
+    "5": "خ",
+    "6": "ط",
+    "7": "ح",
+    "8": "ق",
+    "9": "ص",
+    "a": "",
+    "b": "ب",
+    "c": "ك",
+    "d": "د",
+    "e": "",
+    "f": "ف",
+    "g": "غ",
+    "h": "ه",
+    "i": "",
+    "j": "ج",
+    "k": "ك",
+    "l": "ل",
+    "m": "م",
+    "n": "ن",
+    "o": "",
+    "p": "ب",
+    "q": "ق",
+    "r": "ر",
+    "s": "س",
+    "t": "ت",
+    "u": "",
+    "v": "ف",
+    "w": "و",
+    "x": "كس",
+    "y": "ي",
+    "z": "ز"
+  },
+  "exceptions": {
+    "allah": "الله",
+    "alsalamaleykom": "السلام عليكم",
+    "alsalamalaykom": "السلام عليكم",
+    "salamaleykom": "سلام عليكم",
+    "ezayyak": "ازيك",
+    "m3ak": "معك",
+    "3ala": "على",
+    "2al": "قال",
+    "kan": "كان",
+    "kaan": "كان",
+    "makan": "مكان",
+    "arragel": "الرجل"
+  },
+  "candidates": {
+    "keef": [
+      "كيف",
+      "كيفك",
+      "كيفكم"
+    ]
+  },
+  "dialect_labels": {
+    "default": "Default",
+    "levantine": "Levantine",
+    "egyptian": "Egyptian"
+  },
+  "dialects": {
+    "default": {},
+    "levantine": {
+      "j": "ج"
+    },
+    "egyptian": {
+      "g": "ج"
+    }
+  },
+  "vowels": {
+    "letters": "aeiou",
+    "word_initial": {
+      "a": "أ",
+      "e": "إ",
+      "i": "إ",
+      "o": "أُ",
+      "u": "أُ"
+    },
+    "terminal": {
+      "a": "ا",
+      "e": "ي",
+      "i": "ي",
+      "o": "و",
+      "u": "و"
+    }
+  },
+  "shadda": {
+    "enabled": false,
+    "mark": "ّ",
+    "collapse_double_consonants": true,
+    "consonants": "bcdfghjklmnpqrstvwxyz"
+  },
+  "normalization": {
+    "long_vowel_letters": "aeiou"
+  },
+  "postprocessor": {
+    "dictionary_path": "common_words_1000.json",
+    "fallback_max_distance": 1,
+    "bigram_overrides": {
+      "يا|makan": "مكان",
+      "يا|mkaan": "مكان",
+      "في|makan": "مكان"
+    }
+  }
+}

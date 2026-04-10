@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+  <name>org.freedesktop.IBus.Arabizi</name>
+  <description>Arabizi to Arabic transliteration engine</description>
+  <exec>/usr/bin/arabizi-ibus-engine --ibus</exec>
+  <version>0.1.0</version>
+  <author>Mohammad Abu-Khader</author>
+  <license>MIT</license>
+  <textdomain>arabizi-ibus</textdomain>
+  <engines>
+    <engine>
+      <name>arabizi-translit-engine</name>
+      <longname>Arabizi Transliteration</longname>
+      <description>Real-time Arabizi to Arabic transliteration</description>
+      <language>ar</language>
+      <license>MIT</license>
+      <author>Arabizi-Translit-Engine</author>
+      <icon></icon>
+      <layout>us</layout>
+      <rank>80</rank>
+      <symbol>عر</symbol>
+      <setup></setup>
+    </engine>
+  </engines>
+</component>
