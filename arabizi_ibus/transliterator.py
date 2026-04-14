@@ -888,6 +888,7 @@ class TranslitLogic:
         previous_char: str,
         next_char: str,
         state: TokenState,
+        token: str = "",
     ) -> str | None:
         options = self._map_chunk_candidates(
             chunk,
@@ -896,6 +897,7 @@ class TranslitLogic:
             previous_char=previous_char,
             next_char=next_char,
             state=state,
+            token=token,
         )
         if not options:
             return None
@@ -942,9 +944,10 @@ class TranslitLogic:
             base_score = 1.2 + (len(chunk) - 1) * 1.8
             options: list[tuple[str, float]] = []
             if isinstance(mapped, list):
-                for item in mapped:
+                for index, item in enumerate(mapped):
                     bias = self.name_processor.special_letter_bias(chunk, item, previous_char, next_char, token)
-                    options.append((item, base_score + bias))
+                    penalty = 0.0 if index == 0 else 0.85
+                    options.append((item, base_score + bias - penalty))
             elif isinstance(mapped, str):
                 options.append((mapped, base_score))
             else:
