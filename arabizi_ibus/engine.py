@@ -1,11 +1,60 @@
 from __future__ import annotations
 
 import gi
+import math
+import os
+import sqlite3
+import time
+from pathlib import Path
 
 gi.require_version("IBus", "1.0")
 from gi.repository import IBus
 
 from .key_processor import KeyProcessor, KeyResult
+from .transliterator import TranslitLogic
+
+
+class UserAdapter:
+    def __init__(self, db_path: Path | None = None) -> None:
+        data_home = os.environ.get("XDG_DATA_HOME")
+        if not data_home:
+            data_home = str(Path.home() / ".local" / "share")
+        self.db_path = (Path(db_path) if db_path else Path(data_home) / "arabizi_ibus" / "user_lexicon.db")
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
+        self._conn.execute("PRAGMA journal_mode=WAL")
+        self._conn.execute("PRAGMA synchronous=NORMAL")
+        self._conn.execute(
+            "CREATE TABLE IF NOT EXISTS user_weights (word TEXT PRIMARY KEY, count INTEGER NOT NULL, updated INTEGER NOT NULL)"
+        )
+        self._conn.commit()
+
+    def increment_word(self, word: str) -> None:
+        if not word:
+            return
+        timestamp = int(time.time())
+        cursor = self._conn.execute("SELECT count FROM user_weights WHERE word = ?", (word,))
+        row = cursor.fetchone()
+        if row is None:
+            self._conn.execute(
+                "INSERT INTO user_weights (word, count, updated) VALUES (?, ?, ?)",
+                (word, 1, timestamp),
+            )
+        else:
+            self._conn.execute(
+                "UPDATE user_weights SET count = count + 1, updated = ? WHERE word = ?",
+                (timestamp, word),
+            )
+        self._conn.commit()
+
+    def get_weight(self, word: str) -> float:
+        if not word:
+            return 0.0
+        cursor = self._conn.execute("SELECT count FROM user_weights WHERE word = ?", (word,))
+        row = cursor.fetchone()
+        if not row:
+            return 0.0
+        return math.log1p(row[0])
 
 
 class ArabiziEngine(IBus.Engine):
@@ -15,7 +64,8 @@ class ArabiziEngine(IBus.Engine):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.processor = KeyProcessor()
+        self.user_adapter = UserAdapter()
+        self.processor = KeyProcessor(logic=TranslitLogic(user_adapter=self.user_adapter))
         self.lookup_table = IBus.LookupTable.new(9, 0, True, False)
         self._current_candidates: list[str] = []
         self._dialect = "default"
@@ -75,6 +125,8 @@ class ArabiziEngine(IBus.Engine):
 
         if self._current_candidates and key_name.isdigit() and key_name != "0":
             result = self.processor.select_candidate(int(key_name) - 1)
+            if result.selected_word:
+                self.user_adapter.increment_word(result.selected_word)
             self._apply_result(result)
             return result.consumed
 
@@ -107,9 +159,13 @@ class ArabiziEngine(IBus.Engine):
             return
 
         if result.preedit_text:
+            preview_text = result.preedit_text
+            cursor_pos = len(preview_text)
+            if result.ghost_text:
+                preview_text = f"{preview_text}{result.ghost_text}"
             self.update_preedit_text(
-                IBus.Text.new_from_string(result.preedit_text),
-                len(result.preedit_text),
+                IBus.Text.new_from_string(preview_text),
+                cursor_pos,
                 True,
             )
 

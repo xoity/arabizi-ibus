@@ -22,6 +22,8 @@ class KeyResult:
     clear_preedit: bool = False
     candidates: list[str] = field(default_factory=list)
     hide_candidates: bool = False
+    selected_word: str = ""
+    ghost_text: str = ""
 
 
 class Processor:
@@ -92,6 +94,7 @@ class Processor:
         candidates = self.logic.suggest_candidates(
             self.state.latin_buffer,
             previous_word=self.state.previous_committed_word,
+            beam_width=self._beam_width(),
         )
         if index < 0 or index >= len(candidates):
             return KeyResult(consumed=False)
@@ -103,7 +106,13 @@ class Processor:
         self.state.latin_buffer = ""
         self.state.show_latin_preview = False
         self._update_previous_word(committed)
-        return KeyResult(consumed=True, commit_text=committed, clear_preedit=True, hide_candidates=True)
+        return KeyResult(
+            consumed=True,
+            commit_text=committed,
+            clear_preedit=True,
+            hide_candidates=True,
+            selected_word=committed,
+        )
 
     def handle_char(self, char: str) -> KeyResult:
         if len(char) != 1:
@@ -149,21 +158,47 @@ class Processor:
     def _transliterated_word(self, word: str) -> str:
         if self.state.bypass_mode:
             return word
-        return self.logic.transliterate_word(word, previous_word=self.state.previous_committed_word)
+        return self.logic.transliterate_word(
+            word,
+            previous_word=self.state.previous_committed_word,
+            beam_width=self._beam_width(),
+        )
+
+    def _beam_width(self) -> int:
+        length = len(self.state.latin_buffer)
+        if length < 4:
+            return 48
+        if length < 8:
+            return 28
+        return 14
 
     def _preview_result(self, consumed: bool) -> KeyResult:
         if not self.state.latin_buffer and not self.state.pending_prefix:
             return KeyResult(consumed=consumed, clear_preedit=True, hide_candidates=True)
 
+        beam_width = self._beam_width()
         if self.state.bypass_mode or self.state.show_latin_preview:
             preview_word = self.state.latin_buffer
             candidates: list[str] = []
+            ghost_text = ""
         else:
             preview_word = self.logic.transliterate_word(
                 self.state.latin_buffer,
                 previous_word=self.state.previous_committed_word,
+                beam_width=beam_width,
             )
-            candidates = self.logic.suggest_candidates(self.state.latin_buffer, previous_word=self.state.previous_committed_word)
+            candidates = self.logic.suggest_candidates(
+                self.state.latin_buffer,
+                previous_word=self.state.previous_committed_word,
+                beam_width=beam_width,
+            )
+            ghost_text = self.logic.predict_ghost_suffix(
+                self.state.latin_buffer,
+                previous_word=self.state.previous_committed_word,
+                current_preview=preview_word,
+                candidates=candidates,
+                beam_width=beam_width,
+            )
 
         preview = f"{self.state.pending_prefix}{preview_word}" if self.state.pending_prefix else preview_word
         return KeyResult(
@@ -172,6 +207,7 @@ class Processor:
             clear_preedit=not bool(preview),
             candidates=candidates,
             hide_candidates=not bool(candidates),
+            ghost_text=ghost_text,
         )
 
     def _update_previous_word(self, committed: str) -> None:
