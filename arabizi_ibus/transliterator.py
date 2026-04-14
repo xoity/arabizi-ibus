@@ -12,9 +12,10 @@ from typing import Any, Dict
 @dataclass(frozen=True)
 class LexiconRules:
     prefixes: Dict[str, str]
-    mappings: Dict[str, str]
+    mappings: Dict[str, Any]
     exceptions: Dict[str, str]
     candidates: Dict[str, list[str]]
+    names_lexicon: Dict[str, str]
     dialects: Dict[str, Dict[str, str]]
     dialect_labels: Dict[str, str]
     vowels: str
@@ -60,6 +61,7 @@ def load_lexicon(lexicon_path: str | Path | None = None) -> LexiconRules:
         mappings=payload.get("mappings", {}),
         exceptions=payload.get("exceptions", {}),
         candidates=payload.get("candidates", {}),
+        names_lexicon=payload.get("names_lexicon", {}),
         dialects=payload.get("dialects", {"default": {}}),
         dialect_labels=payload.get("dialect_labels", {"default": "Default"}),
         vowels=vowels.get("letters", "aeiou"),
@@ -406,6 +408,65 @@ class PostProcessor:
                 pass
 
 
+class NameProcessor:
+    COMMON_NAME_PATTERNS = {
+        "mohammad": "محمد",
+        "mohamed": "محمد",
+        "muhammad": "محمد",
+        "mohammed": "محمد",
+        "abu": "أبو",
+    }
+
+    def __init__(self, rules: LexiconRules) -> None:
+        self.rules = rules
+        self.names = {key.lower(): value for key, value in self.rules.names_lexicon.items()}
+
+    def override_name(self, token: str) -> str | None:
+        normalized = token.lower().strip()
+        if not normalized:
+            return None
+        override = self.names.get(normalized)
+        if override:
+            return override
+        if normalized in self.COMMON_NAME_PATTERNS:
+            return self.COMMON_NAME_PATTERNS[normalized]
+        return None
+
+    def candidate_bonus(self, latin_word: str, candidate: str) -> float:
+        token = latin_word.lower().strip()
+        if not token or not candidate:
+            return 0.0
+        override = self.override_name(token)
+        if override and candidate == override:
+            return 3.25
+        if token.startswith("abu") and candidate.startswith("أبو"):
+            return 1.4
+        if token.startswith("moh") or token.startswith("muh"):
+            if candidate == "محمد":
+                return 2.25
+        return 0.0
+
+    def special_letter_bias(
+        self,
+        chunk: str,
+        target: str,
+        previous_char: str,
+        next_char: str,
+        token: str,
+    ) -> float:
+        if chunk != "d" or target != "ض":
+            return 0.0
+
+        bonus = 0.0
+        if next_char in self.rules.vowels or next_char in {"o", "u", "a"}:
+            bonus += 0.8
+        if token.lower().startswith(("moh", "muh", "mu")):
+            bonus += 0.6
+        if token.lower().startswith("abu") and target == "ض":
+            bonus += 0.3
+        return bonus
+
+
 class TranslitLogic:
     BEAM_WIDTH = 24
     MAX_FINAL_CANDIDATES = 12
@@ -428,6 +489,7 @@ class TranslitLogic:
         self._base_path = Path(__file__).parent
         self.user_adapter = user_adapter
         self.post_processor = PostProcessor(self.rules, self._base_path)
+        self.name_processor = NameProcessor(self.rules)
 
     def set_dialect(self, dialect: str) -> None:
         if dialect in self.rules.dialects:
@@ -494,6 +556,10 @@ class TranslitLogic:
         lowered = self._normalize_latin(word)
         if not lowered:
             return []
+
+        override = self.name_processor.override_name(lowered)
+        if override:
+            return [override]
 
         scored: list[tuple[str, float]] = []
         for variant, variant_bonus in self._expand_word_variants(lowered):
@@ -611,6 +677,7 @@ class TranslitLogic:
                         previous_char=previous_char,
                         next_char=next_char,
                         state=state,
+                        token=token,
                     )
                     for mapped, score_bonus in options:
                         rendered = mapped
@@ -635,6 +702,7 @@ class TranslitLogic:
                         previous_char=previous_char,
                         next_char=next_char,
                         state=state,
+                        token=token,
                     )
                     if not options:
                         continue
@@ -749,6 +817,7 @@ class TranslitLogic:
         score += self._vocative_context_bonus(previous_word, candidate)
         if self.user_adapter is not None:
             score += self.user_adapter.get_weight(candidate) * 0.9
+        score += self.name_processor.candidate_bonus(latin_word, candidate)
 
         if self.rules.collapse_double_consonants and not self.rules.shadda_enabled:
             duplicate_run_count = sum(
@@ -841,6 +910,7 @@ class TranslitLogic:
         previous_char: str,
         next_char: str,
         state: TokenState,
+        token: str,
     ) -> list[tuple[str, float]]:
         dialect_map = self.rules.dialects.get(self.dialect, {})
         if chunk in dialect_map:
@@ -870,9 +940,18 @@ class TranslitLogic:
         if chunk in self.rules.mappings:
             mapped = self.rules.mappings[chunk]
             base_score = 1.2 + (len(chunk) - 1) * 1.8
-            options: list[tuple[str, float]] = [(mapped, base_score)]
+            options: list[tuple[str, float]] = []
+            if isinstance(mapped, list):
+                for item in mapped:
+                    bias = self.name_processor.special_letter_bias(chunk, item, previous_char, next_char, token)
+                    options.append((item, base_score + bias))
+            elif isinstance(mapped, str):
+                options.append((mapped, base_score))
+            else:
+                options.append((str(mapped), base_score))
+
             for alt in self.AMBIGUOUS_CHUNK_ALTERNATIVES.get(chunk, ()):
-                if alt == mapped:
+                if any(opt[0] == alt for opt in options):
                     continue
                 options.append((alt, base_score - self.AMBIGUITY_PENALTY))
             return options
