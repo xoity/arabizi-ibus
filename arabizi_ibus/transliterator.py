@@ -101,6 +101,7 @@ def _edit_distance(a: str, b: str) -> int:
 class PostProcessor:
     SQL_PREFIX_LIMIT = 96
     BIGRAM_ROW_LIMIT = 256
+    TRIE_CACHE_MAX = 1000
 
     def __init__(self, rules: LexiconRules, base_path: Path) -> None:
         self.rules = rules
@@ -346,6 +347,8 @@ class PostProcessor:
 
             unpacked = self._decode_prefix_payload(row[0])
             if unpacked:
+                if len(self._trie_cache) >= self.TRIE_CACHE_MAX:
+                    self._trie_cache.pop(next(iter(self._trie_cache)))
                 self._trie_cache[prefix] = unpacked
                 return unpacked
 
@@ -421,8 +424,38 @@ class NameProcessor:
         self.rules = rules
         self.names = {key.lower(): value for key, value in self.rules.names_lexicon.items()}
 
+    @staticmethod
+    def _compact_latin(token: str) -> str:
+        lowered = token.lower().strip().replace("-", "")
+        return "".join(ch for ch in lowered if ch.isalnum() or ch == "\'")
+
+    @staticmethod
+    def _is_khader_variant(token: str) -> bool:
+        lowered = token.lower()
+        if lowered in {"khader", "kheder", "khadir", "khadr", "khdr", "xader", "xadir"}:
+            return True
+        if lowered.startswith(("abu", "abou")):
+            suffix = lowered[3:]
+            return suffix in {"khader", "kheder", "khadir", "khadr", "khdr", "xader", "xadir"}
+        return False
+
+    @staticmethod
+    def _is_mohammad_variant(token: str) -> bool:
+        lowered = token.lower()
+        if lowered.startswith(("moh", "muh")) and lowered.endswith(("mad", "med", "ammad", "ammed")):
+            return True
+        return lowered in {"mhmmd", "mhmd", "mohmd", "muhmd"}
+
+    def is_name_context(self, token: str) -> bool:
+        normalized = self._compact_latin(token)
+        if not normalized:
+            return False
+        if normalized in self.names or normalized in self.COMMON_NAME_PATTERNS:
+            return True
+        return normalized.startswith(("moh", "muh", "abu", "abou", "ibn", "bin")) or self._is_khader_variant(normalized)
+
     def override_name(self, token: str) -> str | None:
-        normalized = token.lower().strip()
+        normalized = self._compact_latin(token)
         if not normalized:
             return None
         override = self.names.get(normalized)
@@ -430,21 +463,55 @@ class NameProcessor:
             return override
         if normalized in self.COMMON_NAME_PATTERNS:
             return self.COMMON_NAME_PATTERNS[normalized]
+
+        if normalized.startswith(("abu", "abou")) and self._is_khader_variant(normalized):
+            return "أبو خضر"
+        if self._is_khader_variant(normalized):
+            return "خضر"
+        if self._is_mohammad_variant(normalized):
+            return "محمد"
         return None
 
     def candidate_bonus(self, latin_word: str, candidate: str) -> float:
-        token = latin_word.lower().strip()
+        token = self._compact_latin(latin_word)
         if not token or not candidate:
             return 0.0
         override = self.override_name(token)
         if override and candidate == override:
             return 3.25
+        if self._is_khader_variant(token):
+            if candidate == "خضر":
+                return 2.1
+            if candidate == "خدر":
+                return -1.1
         if token.startswith("abu") and candidate.startswith("أبو"):
             return 1.4
         if token.startswith("moh") or token.startswith("muh"):
             if candidate == "محمد":
                 return 2.25
         return 0.0
+
+    def apply_frequency_override(
+        self,
+        latin_word: str,
+        scores: Dict[str, float],
+        post_processor: PostProcessor,
+    ) -> None:
+        token = self._compact_latin(latin_word)
+        if not token:
+            return
+
+        if self._is_khader_variant(token):
+            khader_freq = post_processor.frequency_score("خضر")
+            if "خضر" in scores:
+                scores["خضر"] += 1.0 + khader_freq
+            if "خدر" in scores:
+                scores["خدر"] -= 0.8
+
+        if token.startswith(("abu", "abou")) and self._is_khader_variant(token):
+            abu_khader = "أبو خضر"
+            base = scores.get(abu_khader, float("-inf"))
+            scores[abu_khader] = max(base, 1.75 + post_processor.frequency_score("خضر"))
 
     def special_letter_bias(
         self,
@@ -460,6 +527,8 @@ class NameProcessor:
         bonus = 0.0
         if next_char in self.rules.vowels or next_char in {"o", "u", "a"}:
             bonus += 0.8
+        if self.is_name_context(token):
+            bonus += 0.35
         if token.lower().startswith(("moh", "muh", "mu")):
             bonus += 0.6
         if token.lower().startswith("abu") and target == "ض":
@@ -482,6 +551,7 @@ class TranslitLogic:
         "8": ("ك",),
         "9": ("س",),
     }
+    SOLAR_ARABIC_LETTERS = frozenset("تثدذرزسشصضطظلن")
 
     def __init__(self, rules: LexiconRules | None = None, dialect: str = "default", user_adapter: Any | None = None) -> None:
         self.rules = rules or load_lexicon()
@@ -586,14 +656,17 @@ class TranslitLogic:
     def _expand_word_variants(self, token: str) -> list[tuple[str, float]]:
         scored_variants: Dict[str, float] = {token: 0.0}
 
+        hyphenated = "-" in token
         compact = token.replace("-", "")
         if compact:
-            scored_variants[compact] = max(scored_variants.get(compact, float("-inf")), 0.1)
+            compact_bonus = 0.25 if hyphenated else 0.1
+            scored_variants[compact] = max(scored_variants.get(compact, float("-inf")), compact_bonus)
 
         normalized_article = self._normalize_solar_article(compact)
         if normalized_article:
             current_score = scored_variants.get(normalized_article, float("-inf"))
-            scored_variants[normalized_article] = max(current_score, 0.6)
+            solar_bonus = 1.4 if hyphenated and normalized_article != compact else 0.6
+            scored_variants[normalized_article] = max(current_score, solar_bonus)
 
         ranked = sorted(scored_variants.items(), key=lambda item: item[1], reverse=True)
         return ranked
@@ -640,6 +713,11 @@ class TranslitLogic:
                     prefixed = f"{self.rules.prefixes[prefix]}{snapped_tail}"
                     scored.append((prefixed, score + self.PREFIX_SCORE_BONUS + variant_bonus))
 
+                    if variant_bonus >= 1.0 and prefixed.startswith("ال") and len(prefixed) > 2:
+                        shadda_form = self._apply_solar_article_shadda(prefixed)
+                        if shadda_form:
+                            scored.append((shadda_form, score + self.PREFIX_SCORE_BONUS + variant_bonus + 0.2))
+
         for candidate, score in self._decode_with_beam(token, state, beam_width=beam_width):
             scored.append((candidate, score + variant_bonus))
         return scored
@@ -669,9 +747,10 @@ class TranslitLogic:
                 previous_char = token[index - 1] if index > 0 else ""
 
                 if self._is_double_consonant(token, index):
+                    chunk = token[index]
                     next_char = token[index + 2] if index + 2 < len(token) else ""
                     options = self._map_chunk_candidates(
-                        token[index],
+                        chunk,
                         at_word_start=(index == 0),
                         at_word_end=(index + 2 == len(token)),
                         previous_char=previous_char,
@@ -680,6 +759,13 @@ class TranslitLogic:
                         token=token,
                     )
                     for mapped, score_bonus in options:
+                        score_bonus += self.name_processor.special_letter_bias(
+                            chunk=chunk,
+                            target=mapped,
+                            previous_char=previous_char,
+                            next_char=next_char,
+                            token=token,
+                        )
                         rendered = mapped
                         if rendered and self.rules.shadda_enabled:
                             rendered = f"{rendered}{self.rules.shadda_mark}"
@@ -708,6 +794,13 @@ class TranslitLogic:
                         continue
 
                     for mapped, score_bonus in options:
+                        score_bonus += self.name_processor.special_letter_bias(
+                            chunk=chunk,
+                            target=mapped,
+                            previous_char=previous_char,
+                            next_char=next_char,
+                            token=token,
+                        )
                         self._merge_path(
                             next_paths,
                             index=index + window,
@@ -784,11 +877,23 @@ class TranslitLogic:
             if existing is None or final_score > existing:
                 best_scores[snapped] = final_score
 
+        self.name_processor.apply_frequency_override(latin_word, best_scores, self.post_processor)
+
         if not best_scores:
             return [latin_word]
 
         ranked = sorted(best_scores.items(), key=lambda item: (-item[1], len(item[0])))
         return [word for word, _ in ranked[: self.MAX_FINAL_CANDIDATES]]
+
+    def _apply_solar_article_shadda(self, word: str) -> str:
+        if not word.startswith("ال") or len(word) <= 2:
+            return ""
+        root = word[2]
+        if root not in self.SOLAR_ARABIC_LETTERS:
+            return ""
+        if len(word) > 3 and word[3] == self.rules.shadda_mark:
+            return ""
+        return f"{word[:3]}{self.rules.shadda_mark}{word[3:]}"
 
     def predict_ghost_suffix(
         self,
@@ -920,6 +1025,15 @@ class TranslitLogic:
             return [(dialect_map[chunk], base)]
 
         if len(chunk) == 1 and chunk in self.rules.vowels:
+            if chunk in {"o", "u"} and self.name_processor.is_name_context(token):
+                if at_word_start:
+                    mapped = self.rules.initial_vowels.get(chunk, "أُ")
+                    return [(mapped, 1.05), ("أو", 0.35)]
+                if at_word_end:
+                    mapped = self.rules.terminal_vowels.get(chunk, "و")
+                    return [(mapped, 0.95), ("ُ", 0.3), ("", -0.3)]
+                return [("ُ", 1.15), ("و", 0.72), ("", -0.35)]
+
             if at_word_start:
                 mapped = self.rules.initial_vowels.get(chunk, "")
                 return [(mapped, 0.65 if mapped else -0.2)]
@@ -934,10 +1048,14 @@ class TranslitLogic:
                     and next_char not in self.rules.vowels
                     and not previous_char.isdigit()
                     and not next_char.isdigit()
+                    and previous_char not in {"h", "w", "y"}
                 ):
                     return [("ا", 0.35), ("", -0.1)]
 
             return [("", -0.1)]
+
+        if chunk == "h" and self.name_processor.is_name_context(token):
+            return [("ح", 1.55), ("ه", 1.0)]
 
         if chunk in self.rules.mappings:
             mapped = self.rules.mappings[chunk]
@@ -945,9 +1063,8 @@ class TranslitLogic:
             options: list[tuple[str, float]] = []
             if isinstance(mapped, list):
                 for index, item in enumerate(mapped):
-                    bias = self.name_processor.special_letter_bias(chunk, item, previous_char, next_char, token)
                     penalty = 0.0 if index == 0 else 0.85
-                    options.append((item, base_score + bias - penalty))
+                    options.append((item, base_score - penalty))
             elif isinstance(mapped, str):
                 options.append((mapped, base_score))
             else:
