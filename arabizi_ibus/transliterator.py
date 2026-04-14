@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import Future, ThreadPoolExecutor
 import json
 import math
 import sqlite3
@@ -102,15 +103,20 @@ class PostProcessor:
     SQL_PREFIX_LIMIT = 96
     BIGRAM_ROW_LIMIT = 256
     TRIE_CACHE_MAX = 1000
+    BIGRAM_GHOST_CACHE_MAX = 1024
 
     def __init__(self, rules: LexiconRules, base_path: Path) -> None:
         self.rules = rules
         self.base_path = base_path
         self._sqlite_conn: sqlite3.Connection | None = None
+        self._sqlite_db_path: Path | None = None
         self._sqlite_enabled = False
         self._freq_cache: Dict[str, float] = {}
         self._trie_cache: Dict[str, list[tuple[str, float]]] = {}
         self._bigram_cache: Dict[str, Dict[str, float]] = {}
+        self._bigram_top_cache: Dict[str, tuple[str, float]] = {}
+        self._bigram_top_futures: Dict[str, Future[tuple[str, float] | None]] = {}
+        self._db_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="arabizi-db")
 
         db_path = self._resolve_dictionary_db_path()
         if db_path is not None:
@@ -159,6 +165,7 @@ class PostProcessor:
                 conn.close()
                 return False
             self._sqlite_conn = conn
+            self._sqlite_db_path = path
             return True
         except sqlite3.Error:
             return False
@@ -403,7 +410,56 @@ class PostProcessor:
         self._bigram_cache[prev] = scores
         return scores
 
+    def _query_top_bigram_completion(self, previous_word: str) -> tuple[str, float] | None:
+        if self._sqlite_db_path is None:
+            return None
+
+        try:
+            conn = sqlite3.connect(f"file:{self._sqlite_db_path}?mode=ro", uri=True, check_same_thread=False)
+            row = conn.execute(
+                "SELECT curr_word, prob FROM bigrams WHERE prev_word=? ORDER BY prob DESC LIMIT 1",
+                (previous_word,),
+            ).fetchone()
+            conn.close()
+        except sqlite3.Error:
+            return None
+
+        if row is None:
+            return None
+        return str(row[0]), float(row[1])
+
+    def get_top_bigram_completion_nonblocking(self, previous_word: str) -> tuple[str, float] | None:
+        prev = previous_word.strip()
+        if not prev or not self._sqlite_enabled:
+            return None
+
+        cached = self._bigram_top_cache.get(prev)
+        if cached is not None:
+            return cached
+
+        future = self._bigram_top_futures.get(prev)
+        if future is None:
+            self._bigram_top_futures[prev] = self._db_executor.submit(self._query_top_bigram_completion, prev)
+            return None
+
+        if not future.done():
+            return None
+
+        self._bigram_top_futures.pop(prev, None)
+        try:
+            result = future.result()
+        except Exception:
+            return None
+        if result is None:
+            return None
+
+        if len(self._bigram_top_cache) >= self.BIGRAM_GHOST_CACHE_MAX:
+            self._bigram_top_cache.pop(next(iter(self._bigram_top_cache)))
+        self._bigram_top_cache[prev] = result
+        return result
+
     def __del__(self) -> None:
+        self._db_executor.shutdown(wait=False)
         if self._sqlite_conn is not None:
             try:
                 self._sqlite_conn.close()
@@ -904,24 +960,27 @@ class TranslitLogic:
         candidates: list[str] | None = None,
         beam_width: int | None = None,
     ) -> str:
-        if not token or not current_preview:
+        if not token or not current_preview or not previous_word:
             return ""
 
-        if candidates is None:
-            candidates = self.suggest_candidates(token, previous_word=previous_word, beam_width=beam_width)
-        if len(candidates) != 1:
+        top_bigram = self.post_processor.get_top_bigram_completion_nonblocking(previous_word)
+        if top_bigram is None:
+            return ""
+        predicted_word, confidence = top_bigram
+        if confidence < 0.85:
             return ""
 
-        top = candidates[0]
-        if top.startswith(current_preview) and len(top) > len(current_preview):
-            return top[len(current_preview) :]
+        if candidates is not None and candidates and predicted_word not in candidates:
+            return ""
+        if predicted_word.startswith(current_preview) and len(predicted_word) > len(current_preview):
+            return predicted_word[len(current_preview) :]
         return ""
 
     def _candidate_score(self, *, latin_word: str, previous_word: str, candidate: str) -> float:
         score = self.post_processor.frequency_score(candidate) * 1.3
         score += self._vocative_context_bonus(previous_word, candidate)
         if self.user_adapter is not None:
-            score += self.user_adapter.get_weight(candidate) * 0.9
+            score += self.user_adapter.get_weight(candidate) * 2.4
         score += self.name_processor.candidate_bonus(latin_word, candidate)
 
         if self.rules.collapse_double_consonants and not self.rules.shadda_enabled:
