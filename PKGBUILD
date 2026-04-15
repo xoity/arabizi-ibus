@@ -1,6 +1,8 @@
+# Maintainer: Mohammad Abu-Khader <mohammad.abukhader@hotmail.com>
+
 _pkgname=arabizi-ibus
 pkgname=arabizi-ibus-git
-pkgver=r6.b0a4659
+pkgver=0.1.0
 pkgrel=1
 pkgdesc="Linux-native IBus input method for real-time Arabizi-to-Arabic transliteration"
 arch=('any')
@@ -13,11 +15,6 @@ conflicts=('arabizi-ibus')
 install="${pkgname}.install"
 source=("git+${url}.git")
 sha256sums=('SKIP')
-
-pkgver() {
-  cd "${srcdir}/${_pkgname}"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
-}
 
 check() {
   cd "${srcdir}/${_pkgname}"

@@ -23,6 +23,7 @@ dist/
 *.egg-info/
 src/
 pkg/
+arabizi-ibus/
 *.pkg.tar.*
 *.src.tar.*
 
