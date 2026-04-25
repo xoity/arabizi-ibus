@@ -1,0 +1,11 @@
+post_install() {
+  cat <<'EOF'
+==> Arabizi IBus engine installed.
+==> Run: ibus restart
+==> Then open Keyboard -> Input Sources and add: Arabizi Transliteration
+EOF
+}
+
+post_upgrade() {
+  post_install
+}
