@@ -832,7 +832,7 @@ class TranslitLogic:
                             score=path.score + score_bonus + 0.9,
                         )
 
-                for window in (3, 2, 1):
+                for window in range(min(4, len(token) - index), 0, -1):
                     if index + window > len(token):
                         continue
                     chunk = token[index : index + window]
@@ -1083,6 +1083,12 @@ class TranslitLogic:
             base = 1.8 + (len(chunk) - 1) * 0.25
             return [(dialect_map[chunk], base)]
 
+        if chunk == "2" and at_word_start:
+            return [("أ", 1.5), ("إ", 0.6), ("ء", 0.4)]
+
+        if chunk == "2" and at_word_end:
+            return [("ء", 1.5), ("ا", 0.3)]
+
         if len(chunk) == 1 and chunk in self.rules.vowels:
             if chunk in {"o", "u"} and self.name_processor.is_name_context(token):
                 if at_word_start:
@@ -1115,6 +1121,9 @@ class TranslitLogic:
 
         if chunk == "h" and self.name_processor.is_name_context(token):
             return [("ح", 1.55), ("ه", 1.0)]
+
+        if chunk == "a2" and at_word_end:
+            return [("اء", 2.15), ("أ", 1.5)]
 
         if chunk in self.rules.mappings:
             mapped = self.rules.mappings[chunk]
