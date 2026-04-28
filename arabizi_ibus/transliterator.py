@@ -1116,9 +1116,12 @@ class TranslitLogic:
                     and previous_char not in {"h", "w", "y"}
                 ):
                     return [("ا", 0.35), ("", -0.1)]
+                
+                if state.vowel_count > 1 and not at_word_start and not at_word_end:
+                    return [("ا", 0.8), ("", -1.5)]
 
             if chunk == "e" and not at_word_start and not at_word_end:
-                return [("ي", 0.5), ("", -0.5)]
+                return [("ي", 0.8), ("", -1.5)]
 
             return [("", -0.1)]
 
