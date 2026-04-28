@@ -1106,7 +1106,7 @@ class TranslitLogic:
                     and previous_char not in self.rules.vowels
                     and next_char not in self.rules.vowels
                     and not previous_char.isdigit()
-                    and not next_char.isdigit()
+                    and not (next_char.isdigit() and next_char not in "23456789")
                     and previous_char not in {"h", "w", "y"}
                 ):
                     return [("ا", 0.35), ("", -0.1)]
