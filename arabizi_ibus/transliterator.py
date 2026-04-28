@@ -1104,7 +1104,7 @@ class TranslitLogic:
                 return [(mapped, 0.65 if mapped else -0.2)]
             if at_word_end:
                 mapped = self.rules.terminal_vowels.get(chunk, "")
-                return [(mapped, 0.55 if mapped else -0.25)]
+                return [(mapped, 0.75 if mapped else -0.25)]
 
             if chunk == "a" and previous_char and next_char:
                 if (
@@ -1116,6 +1116,9 @@ class TranslitLogic:
                     and previous_char not in {"h", "w", "y"}
                 ):
                     return [("ا", 0.35), ("", -0.1)]
+
+            if chunk == "e" and not at_word_start and not at_word_end:
+                return [("ي", 0.5), ("", -0.5)]
 
             return [("", -0.1)]
 
