@@ -57,10 +57,26 @@ def load_lexicon(lexicon_path: str | Path | None = None) -> LexiconRules:
     shadda = payload.get("shadda", {})
     normalization = payload.get("normalization", {})
     postprocessor = payload.get("postprocessor", {})
+    hand_exceptions = dict(payload.get("exceptions", {}))
+    exceptions = dict(hand_exceptions)
+    corpus_overrides_path = path.with_name("corpus_overrides.json")
+    if corpus_overrides_path.exists():
+        with corpus_overrides_path.open("r", encoding="utf-8") as handle:
+            corpus_overrides = json.load(handle)
+        if isinstance(corpus_overrides, dict):
+            exceptions.update(
+                {
+                    str(latin).strip().lower(): str(arabic).strip()
+                    for latin, arabic in corpus_overrides.items()
+                    if str(latin).strip() and str(arabic).strip()
+                }
+            )
+    exceptions.update(hand_exceptions)
+
     return LexiconRules(
         prefixes=payload.get("prefixes", {}),
         mappings=payload.get("mappings", {}),
-        exceptions=payload.get("exceptions", {}),
+        exceptions=exceptions,
         candidates=payload.get("candidates", {}),
         names_lexicon=payload.get("names_lexicon", {}),
         dialects=payload.get("dialects", {"default": {}}),
@@ -651,17 +667,33 @@ class TranslitLogic:
         if not text:
             return ""
 
+        phrase_override = self.rules.exceptions.get(self._normalize_latin(text))
+        if phrase_override:
+            return phrase_override
+
         words = text.split()
         if len(words) <= 1:
             return self.transliterate_word(text)
 
         previous = ""
         output: list[str] = []
-        for word in words:
+        index = 0
+        while index < len(words):
+            word = words[index]
+            if index + 1 < len(words) and self.is_prefix_token(word):
+                combined = f"{word}{words[index + 1]}"
+                arabic = self.transliterate_word(combined, previous_word=previous)
+                if arabic:
+                    previous = arabic
+                output.append(arabic)
+                index += 2
+                continue
+
             arabic = self.transliterate_word(word, previous_word=previous)
             if arabic:
                 previous = arabic
             output.append(arabic)
+            index += 1
         return " ".join(output)
 
     def transliterate_word(self, word: str, apply_prefix: bool = True, previous_word: str = "", beam_width: int | None = None) -> str:
@@ -691,8 +723,7 @@ class TranslitLogic:
         for variant, variant_bonus in self._expand_word_variants(lowered):
             exception = self.rules.exceptions.get(variant)
             if exception:
-                scored.append((exception, 4.5 + variant_bonus))
-                continue
+                return [exception]
 
             token_state = self._analyze_token_state(variant)
             scored.extend(
@@ -1115,13 +1146,13 @@ class TranslitLogic:
                     and not (next_char.isdigit() and next_char not in "23456789")
                     and previous_char not in {"h", "w", "y"}
                 ):
-                    return [("ا", 0.35), ("", -0.1)]
+                    return [("", 0.35), ("ا", -0.15)]
                 
                 if state.vowel_count > 1 and not at_word_start and not at_word_end:
-                    return [("ا", 0.8), ("", -1.5)]
+                    return [("", 0.45), ("ا", -0.35)]
 
             if chunk == "e" and not at_word_start and not at_word_end:
-                return [("ي", 0.8), ("", -1.5)]
+                return [("", 0.35), ("ي", -0.2)]
 
             return [("", -0.1)]
 

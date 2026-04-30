@@ -40,6 +40,8 @@ class ArabiziEngine:
         key = text.strip().lower()
         if key in self.runtime_phrase_overrides:
             return self.runtime_phrase_overrides[key]
+        if key in self.logic.rules.exceptions:
+            return self.logic.rules.exceptions[key]
 
         words = text.split()
         previous_word = ""
