@@ -33,6 +33,14 @@ class KeyProcessorTests(unittest.TestCase):
         committed, _ = run_stream(self.processor, list("hala "))
         self.assertEqual(committed, "هلا ")
 
+    def test_plain_h_marhaba_commits_breath_h(self) -> None:
+        committed, _ = run_stream(self.processor, list("marhaba "))
+        self.assertEqual(committed, "مرحبا ")
+
+    def test_mixed_arabic_token_keeps_arabizi_digits(self) -> None:
+        committed, _ = run_stream(self.processor, list("7مربن "))
+        self.assertEqual(committed, "حمربن ")
+
     def test_prefix_is_joined_with_next_word(self) -> None:
         committed, _ = run_stream(self.processor, list("al kitaab "))
         self.assertEqual(committed, "الكتاب ")

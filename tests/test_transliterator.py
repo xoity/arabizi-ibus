@@ -27,6 +27,11 @@ class TransliteratorTests(unittest.TestCase):
         self.assertEqual(self.logic.transliterate_word("3arab"), "عرب")
         self.assertEqual(self.logic.transliterate_word("7'aleej"), "خليج")
         self.assertEqual(self.logic.transliterate_word("9a7"), "صح")
+        self.assertEqual(self.logic.transliterate_word("7مربن"), "حمربن")
+
+    def test_contextual_plain_h_for_marhaba(self) -> None:
+        self.assertEqual(self.logic.transliterate_word("marhaba"), "مرحبا")
+        self.assertEqual(self.logic.transliterate_word("mar7aban"), "مرحبا")
 
     def test_contextual_shadda_collapse(self) -> None:
         self.assertEqual(self.logic.transliterate_word("yalla"), "يلا")

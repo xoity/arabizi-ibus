@@ -700,6 +700,10 @@ class TranslitLogic:
         if not word:
             return ""
 
+        mixed_arabic = self._transliterate_mixed_arabic_token(word)
+        if mixed_arabic is not None:
+            return mixed_arabic
+
         generated = self._generate_ranked_candidates(
             word,
             apply_prefix=apply_prefix,
@@ -709,6 +713,43 @@ class TranslitLogic:
         if not generated:
             return self._normalize_latin(word)
         return generated[0]
+
+    def _transliterate_mixed_arabic_token(self, word: str) -> str | None:
+        if not any("\u0600" <= char <= "\u06ff" for char in word):
+            return None
+        if all("\u0600" <= char <= "\u06ff" for char in word):
+            return word
+
+        token = self._normalize_latin(word)
+        output: list[str] = []
+        index = 0
+        while index < len(token):
+            char = token[index]
+            if "\u0600" <= char <= "\u06ff":
+                output.append(char)
+                index += 1
+                continue
+
+            mapped = ""
+            for window in range(min(3, len(token) - index), 0, -1):
+                chunk = token[index : index + window]
+                candidate = self.rules.mappings.get(chunk)
+                if isinstance(candidate, str) and candidate:
+                    mapped = candidate
+                    index += window
+                    break
+            if mapped:
+                if index < len(token) and token[index : index + 1] == mapped:
+                    continue
+                output.append(mapped)
+                continue
+
+            if char in self.rules.vowels:
+                index += 1
+                continue
+            output.append(char)
+            index += 1
+        return "".join(output)
 
     def _generate_ranked_candidates(self, word: str, apply_prefix: bool, previous_word: str, beam_width: int | None = None) -> list[str]:
         lowered = self._normalize_latin(word)
@@ -1156,8 +1197,11 @@ class TranslitLogic:
 
             return [("", -0.1)]
 
-        if chunk == "h" and self.name_processor.is_name_context(token):
-            return [("ح", 1.55), ("ه", 1.0)]
+        if chunk == "h":
+            if self._is_breath_h_context(previous_char=previous_char, next_char=next_char, token=token):
+                return [("ح", 1.85), ("ه", 0.65)]
+            if self.name_processor.is_name_context(token):
+                return [("ح", 1.55), ("ه", 1.0)]
 
         if chunk == "a2" and at_word_end:
             return [("اء", 2.15), ("أ", 1.5)]
@@ -1190,6 +1234,14 @@ class TranslitLogic:
             return False
         char = text[index]
         return char == text[index + 1] and char in self.rules.shadda_consonants
+
+    def _is_breath_h_context(self, *, previous_char: str, next_char: str, token: str) -> bool:
+        token_lower = token.lower()
+        if token_lower.startswith(("marh", "mrh")):
+            return True
+        if "7" in token_lower:
+            return False
+        return previous_char == "r" and next_char in self.rules.vowels
 
 
 class ArabiziTransliterator(TranslitLogic):
